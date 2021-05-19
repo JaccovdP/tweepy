@@ -10,6 +10,7 @@ import json
 import logging
 import re
 import requests
+import urllib3
 import ssl
 import sys
 from threading import Thread
@@ -287,7 +288,7 @@ class Stream(object):
                     self.snooze_time = self.snooze_time_step
                     self.listener.on_connect()
                     self._read_loop(resp)
-            except (Timeout, ssl.SSLError) as exc:
+            except (Timeout, ssl.SSLError, urllib3.exceptions.IncompleteRead, requests.ConnectionError, urllib3.exceptions.ReadTimeoutError, urllib3.exceptions.ProtocolError) as exc:
                 # This is still necessary, as a SSLError can actually be
                 # thrown when using Requests
                 # If it's not time out treat it like any other exception
